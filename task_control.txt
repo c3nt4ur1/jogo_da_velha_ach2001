@@ -1,0 +1,6 @@
+1. Matriz de controle das posições e valores
+2. Função que altera o valor de uma posição
+3. Função para imprimir a matriz de valores no terminal
+4. Função para alterar os valores da matriz
+5. Receber a entrada do usuário e alterar o valor da posição
+6. Função de conferência de resultado a cada entrada
