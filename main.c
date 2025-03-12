@@ -16,7 +16,54 @@ void print_matrix(int* matriz){ //Recebe o endereço do primeiro elemento  da ma
     }
 }
 
-int result_analysis(int* matrix);
+int result_analysis(int* matrix){ //assumindo que a matriz é 3x3
+    int internal_matrix[3][3];
+
+    for(int i = 0; i < 2; i++){
+        for(int j = 0; j < 2; j++){
+            internal_matrix[i][j] = *matrix;
+            matrix++;
+        }
+
+    }
+    for(int i = 0; i < 2; i++){ //Procura linhas horizontais
+        if(internal_matrix[i][0] == internal_matrix[i][1] && internal_matrix [i][0] == internal_matrix[i][2] && internal_matrix[i][0]){
+            if(internal_matrix[i][0] == 1){
+                return 1;
+            }else{
+                return 2;
+            }
+        }
+    }
+
+    for(int i = 0; i < 2; i++){
+        if(internal_matrix[0][i] == internal_matrix[1][i] && internal_matrix[0][i] == internal_matrix[2][i] && internal_matrix[0][i]){
+            if(internal_matrix[0][i] == 1){
+                return 1;
+            }else{
+                return 2;
+            }
+        }
+    }
+
+    if(internal_matrix[0][0] == internal_matrix[1][1] && internal_matrix[0][0] == internal_matrix[2][2] && internal_matrix[0][0]){
+        if(internal_matrix[0][0] == 1){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+
+    if(internal_matrix[0][2] == internal_matrix[1][1] && internal_matrix[0][2] == internal_matrix[2][0] && internal_matrix[0][0]){
+        if(internal_matrix[0][0] == 1){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+
+    return 0; //Ainda não há vencedor
+}
 
 void move(int player, int* matrix_position){
     char position[2];
