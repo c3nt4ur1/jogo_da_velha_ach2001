@@ -67,18 +67,20 @@ int result_analysis(int* matrix){ //assumindo que a matriz é 3x3
 
 void move(int player, int* matrix_position){
     char position[2];
-    scanf(position, "%s"); //posições no formato a1, a2, a3, b1, b2, b3, c1, c2, c3
+    scanf("%s", &position[0]); //posições no formato a1, a2, a3, b1, b2, b3, c1, c2, c3
 
     int row;
     int column;
 
-    switch (position[0]) {
-        case 'a':
-            row = 0;
-        case 'b':
-            row = 1;
-        case 'c':
-            row = 2;
+    if(position[0] == 'a'){
+        row = 1;
+    }else if(position[0] == 'b'){
+        row = 2;
+    }else if(position[0] == 'c'){
+        row = 3;
+    }else{
+        printf("%\n", "selecione uma coluna entre a, b e c");
+        row = -1;
     }
 
     column = (int)(position[1]);
@@ -103,8 +105,21 @@ int main(){
      * 2 -> marcada pelo jogador 2
      */
 
+    int player = 1;
+    while(!result_analysis(&matriz_principal[0][0])){
+
+        move(player, &matriz_principal[0][0]);
+        print_matrix((&matriz_principal[0][0]));
+    }
+
     print_matrix(&matriz_principal[0][0]);
 
+    switch (result_analysis(&matriz_principal[0][0])){
+        case 1:
+            printf("%s", "Vencedor: jogador 1");
+        case 2:
+            printf("%s", "Vencedor: jogador 2");
+    }
     return 0;
 }
 
