@@ -16,14 +16,29 @@ void print_matrix(int* matriz){ //Recebe o endereço do primeiro elemento  da ma
     }
 }
 
-int result_analysis(int* matrix){ //assumindo que a matriz é 3x3
-    int internal_matrix[3][3];
+int result_analysis(int* matrix){ //assumindo que a matriz é 3x3, recebe o elemento [0][0]
+    int internal_matrix[3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
+
+
 
     for(int i = 0; i < 2; i++){
         for(int j = 0; j < 2; j++){
             internal_matrix[i][j] = *matrix;
             matrix++;
         }
+
+
+    int matriz_cheia = 0;
+    for(i = 0; i < 2; i++){
+        for(int j = 0; j < 2; j++){
+            if(internal_matrix[i][j]){
+               matriz_cheia++;
+            }
+        }
+    }
+    if(matriz_cheia == 9){
+        return -1;
+    }
 
     }
     for(int i = 0; i < 2; i++){ //Procura linhas horizontais
@@ -66,11 +81,15 @@ int result_analysis(int* matrix){ //assumindo que a matriz é 3x3
 }
 
 void move(int player, int* matrix_position){
-    char position[2];
-    scanf("%s", &position[0]); //posições no formato a1, a2, a3, b1, b2, b3, c1, c2, c3
+    printf("Jogador %d, Insira a jogada:\n", player);
+    printf("\n");
 
-    int row;
-    int column;
+    char position[2];
+
+    scanf("%s", position); //posições no formato a1, a2, a3, b1, b2, b3, c1, c2, c3
+
+    int row = -1;
+    int column = -1;
 
     if(position[0] == 'a'){
         row = 1;
@@ -79,17 +98,40 @@ void move(int player, int* matrix_position){
     }else if(position[0] == 'c'){
         row = 3;
     }else{
-        printf("%\n", "selecione uma coluna entre a, b e c");
+        printf("%s\n", "selecione uma coluna entre a, b e c");
         row = -1;
     }
 
-    column = (int)(position[1]);
+    if(position[1] == '1'){
+        column = 1;
+    }else if(position[1] == '2'){
+        column = 2;
+    }else if(position[1] == '3'){
+        column = 3;
+    }
 
-    int pointer_position_mover = row+column;
-    matrix_position += pointer_position_mover;
+    int pointer_mover = 0;
 
-    *matrix_position = player;
-    result_analysis(matrix_position-pointer_position_mover); //retorna ao zero da matriz
+    if(column == 2){
+        pointer_mover++;
+    }else if(column == 3){
+        pointer_mover += 2;
+    }
+
+    if(row == 2){
+        pointer_mover += 3;
+    }else if(row == 3){
+        pointer_mover += 6;
+    }
+
+
+    matrix_position += pointer_mover;
+
+    if(!*matrix_position) {
+        *matrix_position = player;
+    }else{
+        printf("%s\n", "Casa ocupada. Perdeu a vez");
+    }
 }
 
 
@@ -105,21 +147,34 @@ int main(){
      * 2 -> marcada pelo jogador 2
      */
 
+    printf("%s\n", "Bem vindo! O jogador 1 inicia o jogo\n Lembre-se do formato do tabuleiro:\n"
+                   "a1|a2|a3\nb1|b2|b3\nc2|c2|c3\nCaso seja inserida uma casa inexistente, o jogador perde a vez");
     int player = 1;
-    while(!result_analysis(&matriz_principal[0][0])){
+
+    move(player, &matriz_principal[0][0]);
+    print_matrix((&matriz_principal[0][0]));
+
+    while(!result_analysis(&matriz_principal[0][0]) || result_analysis(&matriz_principal[0][0]) != -1) {
+        if (player == 2) {
+            player = 1;
+        } else {
+            player = 2;
+        }
 
         move(player, &matriz_principal[0][0]);
         print_matrix((&matriz_principal[0][0]));
+
     }
 
     print_matrix(&matriz_principal[0][0]);
 
-    switch (result_analysis(&matriz_principal[0][0])){
+    switch (result_analysis(&matriz_principal[0][0])) { //Pode ser esse o problema da análise de resultado
         case 1:
             printf("%s", "Vencedor: jogador 1");
         case 2:
             printf("%s", "Vencedor: jogador 2");
+        case -1:
+            printf("%s\n", "Deu velha...");
     }
     return 0;
 }
-
