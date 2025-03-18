@@ -1,23 +1,23 @@
 #include <stdio.h>
 
-void print_matrix(int* matriz){ //Recebe o endereço do primeiro elemento  da matriz bidimensional
-    int* element = matriz;
+void print_matrix(char* matriz){ //Recebe o endereço do primeiro elemento  da matriz bidimensional
+    char* element = matriz;
     int i = 0;
     for(int j = 0; j < sizeof(matriz) + 1; element++, j++){
         if(i<2){
-            printf("%i", *element);
+            printf("%c", *element);
             printf("%c", '|');
             i++;
             continue;
         }else{
-            printf("%i\n", *element);
+            printf("%c\n", *element);
             i = 0;
         }
     }
 }
 
-int result_analysis(int* matrix){ //assumindo que a matriz é 3x3, recebe o elemento [0][0]
-    int internal_matrix[3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
+int result_analysis(char* matrix){ //assumindo que a matriz é 3x3, recebe o elemento [0][0]
+    char internal_matrix[3][3] = {{' ',' ',' '}, {' ',' ',' '}, {' ',' ',' '}};
 
 
 
@@ -80,11 +80,19 @@ int result_analysis(int* matrix){ //assumindo que a matriz é 3x3, recebe o elem
     return 0; //Ainda não há vencedor
 }
 
-void move(int player, int* matrix_position){
+void move(int player, char* matrix_position){
     printf("Jogador %d, Insira a jogada:\n", player);
     printf("\n");
 
     char position[2];
+
+    char usr_char;
+
+    if(player == 1){
+        usr_char = 'X';
+    }else{
+        usr_char = 'O';
+    }
 
     scanf("%s", position); //posições no formato a1, a2, a3, b1, b2, b3, c1, c2, c3
 
@@ -127,8 +135,8 @@ void move(int player, int* matrix_position){
 
     matrix_position += pointer_mover;
 
-    if(!*matrix_position) {
-        *matrix_position = player;
+    if(!*matrix_position || *matrix_position == ' ') {
+        *matrix_position = usr_char;
     }else{
         printf("%s\n", "Casa ocupada. Perdeu a vez");
     }
@@ -138,7 +146,7 @@ void move(int player, int* matrix_position){
 
 int main(){
 
-    int matriz_principal [3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
+    char matriz_principal [3][3] = {{' ',' ',' '}, {' ',' ',' '}, {' ',' ',' '}};
     /*
      * Sobre a matriz:
      * Ela é a grade do jogo da velha
