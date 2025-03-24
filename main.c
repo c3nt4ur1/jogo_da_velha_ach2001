@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void print_matrix(char* matriz){ //Recebe o endereço do primeiro elemento  da matriz bidimensional
+void print_matrix(char* matriz){ //Recebe o endereço do primeiro elemento  da matriz bidimensional 3x3
     char* element = matriz;
     int i = 0;
     for(int j = 0; j < sizeof(matriz) + 1; element++, j++){
@@ -16,68 +16,67 @@ void print_matrix(char* matriz){ //Recebe o endereço do primeiro elemento  da m
     }
 }
 
-int result_analysis(char* matrix){ //assumindo que a matriz é 3x3, recebe o elemento [0][0]
-    char internal_matrix[3][3] = {{' ',' ',' '}, {' ',' ',' '}, {' ',' ',' '}};
-
-
-
-    for(int i = 0; i < 2; i++){
-        for(int j = 0; j < 2; j++){
+int result_analysis(const char* matrix) {
+    char internal_matrix[3][3] = {{' ', ' ', ' '},
+                                  {' ', ' ', ' '},
+                                  {' ', ' ', ' '}};
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
             internal_matrix[i][j] = *matrix;
             matrix++;
         }
 
+    }
 
-    int matriz_cheia = 0;
-    for(i = 0; i < 2; i++){
-        for(int j = 0; j < 2; j++){
-            if(internal_matrix[i][j]){
-               matriz_cheia++;
-            }
+    // Check rows, columns, and diagonals for a winner
+    for (int i = 0; i < 3; i++) {
+        if (internal_matrix[i][0] != ' ' &&
+            internal_matrix[i][0] == internal_matrix[i][1] &&
+            internal_matrix[i][0] == internal_matrix[i][2]) {
+            return (internal_matrix[i][0] == 'X') ? 1 : 2;
         }
-    }
-    if(matriz_cheia == 9){
-        return -1;
-    }
+        if (internal_matrix[0][i] != ' ' &&
+            internal_matrix[0][i] == internal_matrix[1][i] &&
+            internal_matrix[0][i] == internal_matrix[2][i]) {
 
-    }
-    for(int i = 0; i < 2; i++){ //Procura linhas horizontais
-        if(internal_matrix[i][0] == internal_matrix[i][1] && internal_matrix [i][0] == internal_matrix[i][2] && internal_matrix[i][0]){
-            if(internal_matrix[i][0] == 1){
+            if(internal_matrix[0][i] == 'X'){
                 return 1;
             }else{
                 return 2;
             }
+            //return (internal_matrix[0][i] == 'X') ? 1 : 2;
         }
     }
 
-    for(int i = 0; i < 2; i++){
-        if(internal_matrix[0][i] == internal_matrix[1][i] && internal_matrix[0][i] == internal_matrix[2][i] && internal_matrix[0][i]){
-            if(internal_matrix[0][i] == 1){
-                return 1;
-            }else{
-                return 2;
-            }
+    // Check diagonals
+    if (internal_matrix[0][0] == internal_matrix[1][1] &&
+        internal_matrix[0][0] == internal_matrix[2][2] &&
+        internal_matrix[0][0] != ' ') {
+        if(internal_matrix[0][0] == 'X'){
+            return 1;
+        }else{
+            return 2;
         }
     }
-
-    if(internal_matrix[0][0] == internal_matrix[1][1] && internal_matrix[0][0] == internal_matrix[2][2] && internal_matrix[0][0]){
-        if(internal_matrix[0][0] == 1){
+    if (internal_matrix[0][2] == internal_matrix[1][1] &&
+        internal_matrix[0][2] == internal_matrix[2][0] &&
+        internal_matrix[0][2] != ' ') {
+        if(internal_matrix[0][2] == 'X'){
             return 1;
         }else{
             return 2;
         }
     }
 
-    if(internal_matrix[0][2] == internal_matrix[1][1] && internal_matrix[0][2] == internal_matrix[2][0] && internal_matrix[0][0]){
-        if(internal_matrix[0][0] == 1){
-            return 1;
-        }else{
-            return 2;
+    // Check for draw
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (internal_matrix[i][j] == ' ') {
+                return 0; // Game is still ongoing
+            }
         }
     }
-
-    return 0; //Ainda não há vencedor
+    return -1; // Draw
 }
 
 void move(int player, char* matrix_position){
@@ -96,7 +95,7 @@ void move(int player, char* matrix_position){
 
     scanf("%s", position); //posições no formato a1, a2, a3, b1, b2, b3, c1, c2, c3
 
-    int row = -1;
+    int row = 0;
     int column = -1;
 
     if(position[0] == 'a'){
@@ -137,11 +136,10 @@ void move(int player, char* matrix_position){
 
     if(!*matrix_position || *matrix_position == ' ') {
         *matrix_position = usr_char;
-    }else{
+    }else if(row != -1){
         printf("%s\n", "Casa ocupada. Perdeu a vez");
     }
 }
-
 
 
 int main(){
@@ -156,13 +154,13 @@ int main(){
      */
 
     printf("%s\n", "Bem vindo! O jogador 1 inicia o jogo\n Lembre-se do formato do tabuleiro:\n"
-                   "a1|a2|a3\nb1|b2|b3\nc2|c2|c3\nCaso seja inserida uma casa inexistente, o jogador perde a vez");
+                   "a1|a2|a3\nb1|b2|b3\nc2|c2|c3\nCaso seja inserida uma casa inexistente ou ocupada, o jogador perde a vez");
     int player = 1;
 
     move(player, &matriz_principal[0][0]);
     print_matrix((&matriz_principal[0][0]));
 
-    while(!result_analysis(&matriz_principal[0][0]) || result_analysis(&matriz_principal[0][0]) != -1) {
+    while(result_analysis(&matriz_principal[0][0]) == 0){
         if (player == 2) {
             player = 1;
         } else {
@@ -170,19 +168,25 @@ int main(){
         }
 
         move(player, &matriz_principal[0][0]);
-        print_matrix((&matriz_principal[0][0]));
-
+        print_matrix(&matriz_principal[0][0]);
+        if(result_analysis(&matriz_principal[0][0])){
+            break;
+        }
     }
+
 
     print_matrix(&matriz_principal[0][0]);
 
-    switch (result_analysis(&matriz_principal[0][0])) { //Pode ser esse o problema da análise de resultado
+    switch (result_analysis(&matriz_principal[0][0])) {
         case 1:
-            printf("%s", "Vencedor: jogador 1");
+            printf("%s\n", "Vencedor: jogador 1");
+            break;
         case 2:
-            printf("%s", "Vencedor: jogador 2");
+            printf("%s\n", "Vencedor: jogador 2");
+            break;
         case -1:
             printf("%s\n", "Deu velha...");
+            break;
     }
     return 0;
 }
