@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void print_matrix(char* matriz){ //Recebe o endereço do primeiro elemento  da matriz bidimensional 3x3
+void print_matrix(char* matriz){ //Recebe o endereço do primeiro elemento da matriz bidimensional 3x3
     char* element = matriz;
     int i = 0;
     for(int j = 0; j < sizeof(matriz) + 1; element++, j++){
@@ -28,7 +28,7 @@ int result_analysis(const char* matrix) {
 
     }
 
-    // Check rows, columns, and diagonals for a winner
+    // Procura linhas e colunas
     for (int i = 0; i < 3; i++) {
         if (internal_matrix[i][0] != ' ' &&
             internal_matrix[i][0] == internal_matrix[i][1] &&
@@ -44,11 +44,10 @@ int result_analysis(const char* matrix) {
             }else{
                 return 2;
             }
-            //return (internal_matrix[0][i] == 'X') ? 1 : 2;
         }
     }
 
-    // Check diagonals
+    // Procura diagonais
     if (internal_matrix[0][0] == internal_matrix[1][1] &&
         internal_matrix[0][0] == internal_matrix[2][2] &&
         internal_matrix[0][0] != ' ') {
@@ -68,11 +67,11 @@ int result_analysis(const char* matrix) {
         }
     }
 
-    // Check for draw
+    // Procura empate
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (internal_matrix[i][j] == ' ') {
-                return 0; // Game is still ongoing
+                return 0; // Jogo continua
             }
         }
     }
@@ -81,7 +80,6 @@ int result_analysis(const char* matrix) {
 
 void move(int player, char* matrix_position){
     printf("Jogador %d, Insira a jogada:\n", player);
-    printf("\n");
 
     char position[2];
 
@@ -153,8 +151,8 @@ int main(){
      * 2 -> marcada pelo jogador 2
      */
 
-    printf("%s\n", "Bem vindo! O jogador 1 inicia o jogo\n Lembre-se do formato do tabuleiro:\n"
-                   "a1|a2|a3\nb1|b2|b3\nc2|c2|c3\nCaso seja inserida uma casa inexistente ou ocupada, o jogador perde a vez");
+    printf("%s\n", "\nBem vindo!\nO jogador 1 inicia o jogo.\n\nLembre-se do formato do tabuleiro:\n"
+                   "a1|a2|a3\nb1|b2|b3\nc2|c2|c3\nCaso seja inserida uma casa inexistente ou ocupada, o jogador perde a vez.\n");
     int player = 1;
 
     move(player, &matriz_principal[0][0]);
@@ -190,3 +188,4 @@ int main(){
     }
     return 0;
 }
+
