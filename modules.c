@@ -72,6 +72,7 @@ int result_analysis(const char* matrix) {
         }
     }
 
+
     // Procura empate (Se ainda há casas livre)
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
